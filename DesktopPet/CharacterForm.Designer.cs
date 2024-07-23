@@ -52,6 +52,7 @@
             ResumeLayout(false);
         }
 
+
         #endregion
 
         private System.Windows.Forms.Timer updateTimer;

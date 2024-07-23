@@ -1,22 +1,27 @@
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 
 namespace DesktopPet
 {
     public partial class CharacterForm : Form
     {
+        bool hasHandle = false;
+        GameTime gameTime = new();
+        ICharacter character;
+        IDrawState drawState;
         public CharacterForm()
         {
             InitializeComponent();
+            var bmp = new Bitmap("char.png");
+            Size = bmp.Size;
+            character = new Character(new (bmp.Width,bmp.Height));
+            var db = new DrawBits(SetBits);
+            db.AddState(CharacterState.Idle, bmp);
+            drawState = db;
         }
-        bool hasHandle = false;
 
         private void CharacterForm_Load(object sender, EventArgs e)
         {
-            var bmp = new Bitmap("char.png");
-            Size = bmp.Size;
-            SetBits(bmp);
             Debug.WriteLine(Size);
         }
         protected override void OnClosing(CancelEventArgs e)
@@ -85,27 +90,27 @@ namespace DesktopPet
                 Win32.DeleteDC(memDc);
             }
         }
-        Point offset;
-        bool dragging = false;
-        private void CharacterForm_MouseDown(object sender, MouseEventArgs e)
-        {
-            dragging = true;
-            offset = new Point(Left - Cursor.Position.X, Top - Cursor.Position.Y);
-        }
-
-        private void updateTimer_Tick(object sender, EventArgs e)
-        {
-            if (dragging)
-            {
-                Left = offset.X + Cursor.Position.X;
-                Top = offset.Y + Cursor.Position.Y;
-            }
-
-        }
-
         private void CharacterForm_MouseUp(object sender, MouseEventArgs e)
         {
-            dragging = false;
+            character.OnMouseUp();
         }
+
+        private void CharacterForm_MouseDown(object sender, MouseEventArgs e)
+        {
+            character.OnMouseDown(new(Cursor.Position.X, Cursor.Position.Y));
+        }
+        private void updateTimer_Tick(object sender, EventArgs e)
+        {
+            GameFrame frame;
+            frame.cursor = new(Cursor.Position.X, Cursor.Position.Y);
+            frame.delta = gameTime.Delta;
+            character.Update(frame);
+            drawState.DrawState(character.State);
+            Left = character.Position.x;
+            Top = character.Position.y;
+
+            gameTime.Tick();
+        }
+
     }
 }

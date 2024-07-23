@@ -17,10 +17,17 @@ namespace DesktopPet
             var bmp = new Bitmap("char.png");
             Size = bmp.Size;
             var bounds = new Bounds2();
-            bounds.size = new(SystemInformation.VirtualScreen.Width,SystemInformation.VirtualScreen.Height);
-            character = new Character(new (bmp.Width,bmp.Height),bounds);
+            bounds.size = new(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+            character = new Character(new(bmp.Width, bmp.Height), bounds);
             var db = new DrawBits(SetBits);
             db.AddState(CharacterState.Idle, bmp);
+            db.AddState(CharacterState.WalkingRight, bmp);
+            var bmp1 = new Bitmap(bmp);
+            bmp1.RotateFlip(RotateFlipType.RotateNoneFlipX);
+            db.AddState(CharacterState.WalkingLeft, bmp1);
+            var bmp2 = new Bitmap(bmp);
+            bmp2.RotateFlip(RotateFlipType.RotateNoneFlipY);
+            db.AddState(CharacterState.Happy, bmp2);
             drawState = db;
         }
 
@@ -47,6 +54,7 @@ namespace DesktopPet
             {
                 CreateParams cParms = base.CreateParams;
                 cParms.ExStyle |= 0x00080000; // WS_EX_LAYERED
+                cParms.ExStyle |= 0x00000008; // WS_EX_TOPMOST
                 return cParms;
             }
         }
@@ -116,5 +124,12 @@ namespace DesktopPet
             gameTime.Tick();
         }
 
+        private void CharacterForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Space)
+            {
+                character.MakeHappy();
+            }
+        }
     }
 }

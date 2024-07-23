@@ -13,9 +13,13 @@ namespace DesktopPet.Scheduler
 
         public void AddTask(ActionTask task)
         {
-            mutex.WaitOne();
-            tasks.Add(task);
-            mutex.ReleaseMutex();
+            Task.Run(() =>
+            {
+                mutex.WaitOne();
+                tasks.Add(task);
+                mutex.ReleaseMutex();
+            });
+
         }
         public void Update(double delta)
         {

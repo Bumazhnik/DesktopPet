@@ -10,5 +10,6 @@ internal interface ICharacter
 
     void OnMouseDown(Vector2 cursor);
     void OnMouseUp();
+    void MakeHappy();
 }
 

@@ -1,6 +1,9 @@
 ﻿namespace DesktopPet.Characters;
 internal enum CharacterState
 {
-    Idle
+    Idle,
+    WalkingLeft,
+    WalkingRight,
+    Happy
 }
 

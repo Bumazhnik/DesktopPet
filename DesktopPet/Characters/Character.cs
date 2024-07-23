@@ -11,7 +11,7 @@ namespace DesktopPet.Characters
 {
     internal class Character : ICharacter
     {
-        public CharacterState State => CharacterState.Idle;
+        public CharacterState State { get; set; }
 
         private Vector2 position;
         public Vector2 Position
@@ -125,7 +125,7 @@ namespace DesktopPet.Characters
             }
         }
         CharacterBehaviour _maxBehaviour = Enum.GetValues<CharacterBehaviour>().Last();
-        double walkSpeed = 400;
+        double walkSpeed = 200;
         double jumpForce = -1500;
         CharacterBehaviour currentBehaviour;
         public void AddRandomTask()
@@ -137,22 +137,41 @@ namespace DesktopPet.Characters
                 case CharacterBehaviour.None:
                     break;
                 case CharacterBehaviour.WalkLeft:
-                    behaviourScheduler.AddTask(new(() => velocity.x = walkSpeed, 0.5));
+                    behaviourScheduler.AddTask(new(() => 
+                    {
+                        velocity.x = -walkSpeed;
+                        State = CharacterState.WalkingLeft;
+                    }, 1));
                     break;
                 case CharacterBehaviour.WalkRight:
-                    behaviourScheduler.AddTask(new(() => velocity.x = -walkSpeed, 0.5));
+                    behaviourScheduler.AddTask(new(() =>
+                    {
+                        velocity.x = walkSpeed;
+                        State = CharacterState.WalkingRight;
+                    }, 1));
                     break;
                 case CharacterBehaviour.Jump:
-                    Task.Run(() =>
-                    {
-                        scheduler.AddTask(new(Jump, 0.5, 2, true));
-                    });
+                    Jump();
                     break;
             }
         }
         public void Jump()
         {
             velocity.y = jumpForce;
+        }
+
+        public void MakeHappy()
+        {
+            behaviourScheduler.ClearTasks();
+            scheduler.AddTask(new(Jump, 0.5, 2, true));
+            behaviourScheduler.AddTask(new(() =>
+            {
+                State = CharacterState.Happy;
+            }, 1));
+            scheduler.AddTask(new(() =>
+            {
+                State = CharacterState.Idle;
+            }, 1.1,1));
         }
     }
 }

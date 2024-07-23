@@ -1,4 +1,4 @@
-﻿namespace DesktopPet;
+﻿namespace DesktopPet.Characters;
 internal enum CharacterState
 {
     Idle

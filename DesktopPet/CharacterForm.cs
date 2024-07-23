@@ -1,3 +1,5 @@
+using DesktopPet.Characters;
+using DesktopPet.Structs;
 using System.ComponentModel;
 using System.Diagnostics;
 
@@ -14,7 +16,9 @@ namespace DesktopPet
             InitializeComponent();
             var bmp = new Bitmap("char.png");
             Size = bmp.Size;
-            character = new Character(new (bmp.Width,bmp.Height));
+            var bounds = new Bounds2();
+            bounds.size = new(SystemInformation.VirtualScreen.Width,SystemInformation.VirtualScreen.Height);
+            character = new Character(new (bmp.Width,bmp.Height),bounds);
             var db = new DrawBits(SetBits);
             db.AddState(CharacterState.Idle, bmp);
             drawState = db;
@@ -106,8 +110,8 @@ namespace DesktopPet
             frame.delta = gameTime.Delta;
             character.Update(frame);
             drawState.DrawState(character.State);
-            Left = character.Position.x;
-            Top = character.Position.y;
+            Left = (int)character.Position.x;
+            Top = (int)character.Position.y;
 
             gameTime.Tick();
         }

@@ -46,6 +46,7 @@
             DoubleBuffered = true;
             Name = "CharacterForm";
             Text = "Form1";
+            TopMost = true;
             Load += CharacterForm_Load;
             MouseDown += CharacterForm_MouseDown;
             MouseUp += CharacterForm_MouseUp;

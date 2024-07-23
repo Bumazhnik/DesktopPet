@@ -1,4 +1,6 @@
-﻿namespace DesktopPet;
+﻿using DesktopPet.Structs;
+
+namespace DesktopPet;
 internal struct GameFrame
 {
     public double delta;

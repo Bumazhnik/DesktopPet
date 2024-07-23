@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DesktopPet
+namespace DesktopPet.Structs
 {
     internal struct Vector2Int
     {

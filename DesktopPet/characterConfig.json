@@ -1,16 +1,11 @@
 {
-  "States": {
-    "Idle": "CharacterImages/idle.png",
-    "WalkingLeft": "CharacterImages/walkLeft.png",
-    "WalkingRight": "CharacterImages/walkRight.png",
-    "Happy": "CharacterImages/happy.png"
-  },
-  "FavoriteWords": [
-    "one",
-    "two",
-    "three",
-    "four",
-    "привет"
-  ],
-  "BackSpaceDeletes": true
+    "States": {
+        "Idle": "CharacterAssets/idle.png",
+        "WalkingLeft": "CharacterAssets/walkLeft.png",
+        "WalkingRight": "CharacterAssets/walkRight.png",
+        "Happy": "CharacterAssets/happy.png"
+    },
+    "BackSpaceDeletes": true,
+    "HappySound": "CharacterAssets/happySound.wav",
+    "FavoriteWords": ["one", "two", "three", "four", "привет"]
 }

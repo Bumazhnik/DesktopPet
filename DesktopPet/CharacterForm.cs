@@ -3,6 +3,7 @@ using DesktopPet.KeyboardHook;
 using DesktopPet.Structs;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Media;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -18,6 +19,7 @@ namespace DesktopPet
         GlobalKeyboardHook hook = new();
         CharacterConfig config;
         Size size;
+        SoundPlayer? player;
         public CharacterForm(string configPath)
         {
             InitializeComponent();
@@ -38,6 +40,9 @@ namespace DesktopPet
             else
                 config = new CharacterConfig();
             config.SimplifyWords();
+
+            if(File.Exists(config.HappySound))
+                player = new SoundPlayer(config.HappySound);
 
             foreach (var item in config.States)
             {
@@ -80,6 +85,10 @@ namespace DesktopPet
                 {
                     if (text.EndsWith(item))
                     {
+                        if(player != null)
+                        {
+                            player.Play();
+                        }
                         character.MakeHappy();
                         break;
                     }

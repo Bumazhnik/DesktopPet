@@ -7,6 +7,7 @@ internal class CharacterConfig
     public Dictionary<CharacterState, string> States { get; set; } = new();
     public List<string> FavoriteWords { get; set; } = new();
     public bool BackSpaceDeletes { get; set; }
+    public string HappySound { get; set; } = "";
     public int GroundHeight { get; set; } = 40;
     public void SimplifyWords()
     {

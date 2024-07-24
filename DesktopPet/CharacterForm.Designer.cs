@@ -44,6 +44,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             DoubleBuffered = true;
+            FormBorderStyle = FormBorderStyle.None;
             Name = "CharacterForm";
             Text = "Form1";
             TopMost = true;

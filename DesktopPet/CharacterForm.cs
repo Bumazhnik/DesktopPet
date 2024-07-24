@@ -17,10 +17,10 @@ namespace DesktopPet
         IDrawState drawState;
         GlobalKeyboardHook hook = new();
         CharacterConfig config;
+        Size size;
         public CharacterForm(string configPath)
         {
             InitializeComponent();
-
             var db = new DrawBits(SetBits);
 
             if (File.Exists(configPath))
@@ -42,7 +42,7 @@ namespace DesktopPet
             foreach (var item in config.States)
             {
                 var bmp = new Bitmap(item.Value);
-                Size = bmp.Size;
+                size = bmp.Size;
                 db.AddState(item.Key, bmp);
             }
 
@@ -53,11 +53,12 @@ namespace DesktopPet
 
             var bounds = new Bounds2();
             bounds.size = new(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height - config.GroundHeight);
-            character = new Character(new(0, 0, Size.Width, Size.Height), bounds);
+            character = new Character(new(0, 0, size.Width, size.Height), bounds);
         }
 
         private void CharacterForm_Load(object sender, EventArgs e)
         {
+            Size = size;
             Debug.WriteLine(Size);
             hook.OnKeyPressed += Hook_OnKeyPressed;
             hook.HookKeyboard();

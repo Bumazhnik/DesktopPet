@@ -20,6 +20,7 @@ internal static class KeyboardStringHelper
         {"`","oem3" },
         {" ","space" }
     };
+    private static readonly Keys[] notAllowedKeys = [Keys.Shift, Keys.ShiftKey, Keys.LShiftKey, Keys.RShiftKey];
     public static string FromRussian(this string russian)
     {
         StringBuilder builder = new StringBuilder(russian);
@@ -38,4 +39,5 @@ internal static class KeyboardStringHelper
         }
         return builder.ToString();
     }
+    public static bool IsAllowed(this Keys key)=>!notAllowedKeys.Contains(key);
 }

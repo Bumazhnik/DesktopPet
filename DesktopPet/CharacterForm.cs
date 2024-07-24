@@ -71,8 +71,20 @@ namespace DesktopPet
                 if(keyboardInput.Length > 0)
                     keyboardInput.Length--;
             }
-            else
+            else if(key.IsAllowed())
+            {
                 keyboardInput.Append(key.ToString().ToLower());
+                string text = keyboardInput.ToString();
+                foreach (var item in config.FavoriteWords)
+                {
+                    if (text.EndsWith(item))
+                    {
+                        character.MakeHappy();
+                        break;
+                    }
+                }
+            }
+
             if(keyboardInput.Length > maxLength)
             {
                 keyboardInput.Remove(0,keyboardInput.Length - maxLength);
@@ -81,15 +93,8 @@ namespace DesktopPet
         private void Hook_OnKeyPressed(object? sender, Keys e)
         {
             AddKeyboardKey(e);
-            string text = keyboardInput.ToString();
-            foreach (var item in config.FavoriteWords)
-            {
-                if (text.EndsWith(item)){
-                    character.MakeHappy();
-                    break;
-                }
-            }
-            Debug.WriteLine(text);
+
+            Debug.WriteLine(keyboardInput.ToString());
         }
 
         protected override void OnClosing(CancelEventArgs e)

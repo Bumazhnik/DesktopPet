@@ -5,8 +5,7 @@ internal interface ICharacter
 {
     void Update(GameFrame frame);
     CharacterState State { get; }
-    Vector2 Position { get; }
-    Size2 Size { get; }
+    Bounds2 CharacterBounds { get; }
 
     void OnMouseDown(Vector2 cursor);
     void OnMouseUp();

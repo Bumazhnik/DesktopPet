@@ -21,6 +21,15 @@ namespace DesktopPet.Scheduler
             });
 
         }
+        public void ClearTasks()
+        {
+            Task.Run(() =>
+            {
+                mutex.WaitOne();
+                tasks.Clear();
+                mutex.ReleaseMutex();
+            });
+        }
         public void Update(double delta)
         {
             mutex.WaitOne();

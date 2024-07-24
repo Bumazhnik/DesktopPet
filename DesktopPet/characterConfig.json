@@ -1,0 +1,8 @@
+{
+  "States": {
+    "Idle": "CharacterImages/idle.png",
+    "WalkingLeft": "CharacterImages/walkLeft.png",
+    "WalkingRight": "CharacterImages/walkRight.png",
+    "Happy": "CharacterImages/happy.png"
+  }
+}

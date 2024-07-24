@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DesktopPet.Scheduler;
+﻿using DesktopPet.Scheduler;
 using DesktopPet.Structs;
+using System.Diagnostics;
 
 namespace DesktopPet.Characters
 {
@@ -15,7 +10,7 @@ namespace DesktopPet.Characters
 
         private Vector2 Position
         {
-            get => CharacterBounds.position; 
+            get => CharacterBounds.position;
             set
             {
                 var b = CharacterBounds;
@@ -71,6 +66,8 @@ namespace DesktopPet.Characters
             }
             Debug.WriteLine(velocity);
             Debug.WriteLine(currentBehaviour);
+            Debug.WriteLine("Behaviours: " + behaviourScheduler.Count);
+            Debug.WriteLine("Actions: " + actionScheduler.Count);
         }
 
         private void ReduceXVelocity(double delta)
@@ -80,7 +77,7 @@ namespace DesktopPet.Characters
             if (velocity.x > -2 && velocity.x < 2)
                 velocity.x = 0;
         }
-        public void OnMouseDown(Vector2 cursor)
+        public async void OnMouseDown(Vector2 cursor)
         {
             dragging = true;
             currentBehaviour = CharacterBehaviour.None;
@@ -88,17 +85,17 @@ namespace DesktopPet.Characters
             offsetX = Position.x - cursor.x;
             offsetY = Position.y - cursor.y;
             ResetVelocity();
-            ClearAllTasks();
+            await ClearAllTasks();
         }
-        private void ClearAllTasks()
+        private async Task ClearAllTasks()
         {
-            actionScheduler.ClearTasks();
+            await actionScheduler.ClearTasks();
             behaviourScheduler.ClearTasks();
         }
-        public void OnMouseUp()
+        public async void OnMouseUp()
         {
             dragging = false;
-            ScheduleRandomTasks();
+            await ScheduleRandomTasks();
         }
         private void ResetVelocity()
         {
@@ -121,9 +118,9 @@ namespace DesktopPet.Characters
         }
         private void ClampToBounds()
         {
-            if (Bounds2.ClampsToLeft(CharacterBounds,FieldBounds))//Left
+            if (Bounds2.ClampsToLeft(CharacterBounds, FieldBounds))//Left
             {
-                CharacterBounds = Bounds2.StickToLeft(CharacterBounds,FieldBounds);
+                CharacterBounds = Bounds2.StickToLeft(CharacterBounds, FieldBounds);
 
                 velocity.x = Math.Abs(velocity.x);
             }
@@ -146,14 +143,15 @@ namespace DesktopPet.Characters
             }
         }
 
-        private void ScheduleRandomTasks()
+        private async Task ScheduleRandomTasks()
         {
-            actionScheduler.AddTask(new(AddRandomTask, 1.5));
+            await actionScheduler.AddTask(new(AddRandomTask, 1));
         }
         private void AddRandomTask()
         {
             if (dragging) return;
             currentBehaviour = (CharacterBehaviour)Random.Shared.Next((int)_maxBehaviour + 1);
+            //currentBehaviour = CharacterBehaviour.WalkRight;
             switch (currentBehaviour)
             {
                 case CharacterBehaviour.None:
@@ -184,19 +182,16 @@ namespace DesktopPet.Characters
             velocity.y = jumpForce;
         }
 
-        public void MakeHappy()
+        public async void MakeHappy()
         {
-            ClearAllTasks();
-            ScheduleRandomTasks();
-            actionScheduler.AddTask(new(Jump, 0.4, 2, true));
-            behaviourScheduler.AddTask(new(() =>
-            {
-                State = CharacterState.Happy;
-            }, 1));
-            actionScheduler.AddTask(new(() =>
+            await ClearAllTasks();  
+            await ScheduleRandomTasks();
+            await actionScheduler.AddTask(new(Jump, 0.4, 2, true));
+            State = CharacterState.Happy;
+            await actionScheduler.AddTask(new(() =>
             {
                 State = CharacterState.Idle;
-            }, 1.1,1));
+            }, 1.1, 1));
         }
     }
 }

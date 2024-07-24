@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DesktopPet.Scheduler
+﻿namespace DesktopPet.Scheduler
 {
     internal class BehaviourTaskScheduler
     {
@@ -28,9 +22,10 @@ namespace DesktopPet.Scheduler
             if (tasks.Count <= 0) return;
             var task = tasks[0];
             task.Update(delta);
-            if(task.Ended)
+            if (task.Ended)
                 tasks.RemoveAt(0);
             mutex.ReleaseMutex();
         }
+        public int Count => tasks.Count;
     }
 }

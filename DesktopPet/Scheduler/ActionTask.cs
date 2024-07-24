@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DesktopPet.Scheduler
+﻿namespace DesktopPet.Scheduler
 {
     internal class ActionTask
     {
@@ -26,7 +20,7 @@ namespace DesktopPet.Scheduler
         public void AddDelta(double delta)
         {
             time += delta;
-            while(time > delay && CanExecute)
+            while (time > delay && CanExecute)
             {
                 time -= delay;
                 Execute();

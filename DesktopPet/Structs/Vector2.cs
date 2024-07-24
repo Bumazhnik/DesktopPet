@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DesktopPet.Structs
+﻿namespace DesktopPet.Structs
 {
     internal struct Vector2
     {
@@ -18,7 +12,7 @@ namespace DesktopPet.Structs
         }
         public static Vector2 Lerp(Vector2 a, Vector2 b, double t)
         {
-            t = Math.Max(Math.Min(t, 1),0);
+            t = Math.Max(Math.Min(t, 1), 0);
             return new Vector2(
                 a.x + (b.x - a.x) * t,
                 a.y + (b.y - a.y) * t

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DesktopPet.Characters;
+﻿using DesktopPet.Characters;
 
 namespace DesktopPet
 {
@@ -17,14 +12,14 @@ namespace DesktopPet
         {
             this.drawAction = drawAction;
         }
-        public void AddState(CharacterState state,Bitmap bmp)
+        public void AddState(CharacterState state, Bitmap bmp)
         {
             stateBitmaps.Add(state, bmp);
         }
 
         public void DrawState(CharacterState state)
         {
-            if(previousState != state)
+            if (previousState != state)
             {
                 drawAction(stateBitmaps[state]);
             }

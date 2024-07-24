@@ -1,7 +1,10 @@
 using DesktopPet.Characters;
+using DesktopPet.KeyboardHook;
 using DesktopPet.Structs;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace DesktopPet
 {
@@ -11,35 +14,69 @@ namespace DesktopPet
         GameTime gameTime = new();
         ICharacter character;
         IDrawState drawState;
-        public CharacterForm()
+        GlobalKeyboardHook hook = new();
+        CharacterConfig config;
+        string configPath;
+        public CharacterForm(string configPath)
         {
+            this.configPath = configPath;
             InitializeComponent();
-            var bmp = new Bitmap("char.png");
-            Size = bmp.Size;
+
+            var db = new DrawBits(SetBits);
+
+            if (File.Exists(configPath))
+            {
+                var json = File.ReadAllText(configPath);
+                JsonSerializerOptions options = new()
+                {
+                    Converters =
+                    {
+                        new JsonStringEnumConverter()
+                    }
+                };
+                config = JsonSerializer.Deserialize<CharacterConfig>(json, options) ?? new CharacterConfig();
+            }
+            else
+                config = new CharacterConfig();
+
+            foreach (var item in config.States)
+            {
+                var bmp = new Bitmap(item.Value);
+                Size = bmp.Size;
+                db.AddState(item.Key, bmp);
+            }
+
+
+            drawState = db;
+
+
+
             var bounds = new Bounds2();
             bounds.size = new(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-            character = new Character(new(0,0,bmp.Width, bmp.Height), bounds);
-            var db = new DrawBits(SetBits);
-            db.AddState(CharacterState.Idle, bmp);
-            db.AddState(CharacterState.WalkingRight, bmp);
-            var bmp1 = new Bitmap(bmp);
-            bmp1.RotateFlip(RotateFlipType.RotateNoneFlipX);
-            db.AddState(CharacterState.WalkingLeft, bmp1);
-            var bmp2 = new Bitmap(bmp);
-            bmp2.RotateFlip(RotateFlipType.RotateNoneFlipY);
-            db.AddState(CharacterState.Happy, bmp2);
-            drawState = db;
+            character = new Character(new(0, 0, Size.Width, Size.Height), bounds);
         }
 
         private void CharacterForm_Load(object sender, EventArgs e)
         {
             Debug.WriteLine(Size);
+            hook.OnKeyPressed += Hook_OnKeyPressed;
+            hook.HookKeyboard();
         }
+
+        private void Hook_OnKeyPressed(object? sender, Keys e)
+        {
+            if (e == Keys.Space)
+            {
+                character.MakeHappy();
+            }
+        }
+
         protected override void OnClosing(CancelEventArgs e)
         {
             //e.Cancel = true;
             base.OnClosing(e);
             hasHandle = false;
+            hook.UnHookKeyboard();
         }
 
         protected override void OnHandleCreated(EventArgs e)
@@ -124,12 +161,5 @@ namespace DesktopPet
             gameTime.Tick();
         }
 
-        private void CharacterForm_KeyDown(object sender, KeyEventArgs e)
-        {
-            if(e.KeyCode == Keys.Space)
-            {
-                character.MakeHappy();
-            }
-        }
     }
 }

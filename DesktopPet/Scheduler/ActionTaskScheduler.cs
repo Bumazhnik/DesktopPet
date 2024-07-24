@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DesktopPet.Scheduler
+﻿namespace DesktopPet.Scheduler
 {
     internal class ActionTaskScheduler
     {
         private List<ActionTask> tasks = new();
         Mutex mutex = new();
 
-        public void AddTask(ActionTask task)
+        public async Task AddTask(ActionTask task)
         {
-            Task.Run(() =>
+            await Task.Run(() =>
             {
                 mutex.WaitOne();
                 tasks.Add(task);
@@ -21,9 +15,9 @@ namespace DesktopPet.Scheduler
             });
 
         }
-        public void ClearTasks()
+        public async Task ClearTasks()
         {
-            Task.Run(() =>
+            await Task.Run(() =>
             {
                 mutex.WaitOne();
                 tasks.Clear();
@@ -40,5 +34,6 @@ namespace DesktopPet.Scheduler
             tasks.RemoveAll(x => !x.CanExecute);
             mutex.ReleaseMutex();
         }
+        public int Count => tasks.Count;
     }
 }

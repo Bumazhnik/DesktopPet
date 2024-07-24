@@ -48,7 +48,6 @@
             Text = "Form1";
             TopMost = true;
             Load += CharacterForm_Load;
-            KeyDown += CharacterForm_KeyDown;
             MouseDown += CharacterForm_MouseDown;
             MouseUp += CharacterForm_MouseUp;
             ResumeLayout(false);

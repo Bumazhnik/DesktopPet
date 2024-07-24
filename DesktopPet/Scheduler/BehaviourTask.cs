@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DesktopPet.Scheduler
+﻿namespace DesktopPet.Scheduler
 {
     internal class BehaviourTask
     {
@@ -19,7 +13,7 @@ namespace DesktopPet.Scheduler
         }
         public void Update(double delta)
         {
-            if(!Ended)
+            if (!Ended)
                 action();
             currentTime += delta;
         }

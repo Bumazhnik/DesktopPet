@@ -31,7 +31,8 @@ namespace DesktopPet.Characters
         private CharacterBehaviour currentBehaviour;
         private readonly double walkSpeed = 200;
         private readonly double jumpForce = -1500;
-        private readonly double throwSpeed = 30;
+        private readonly double smallJumpForce = -800;
+        private readonly double throwSpeed = 50;
         private readonly double gravity = 980 * 8;
         private double offsetX;
         private double offsetY;
@@ -72,7 +73,7 @@ namespace DesktopPet.Characters
 
         private void ReduceXVelocity(double delta)
         {
-            double reduceSpeed = 5;
+            double reduceSpeed = 10;
             velocity = Vector2.Lerp(velocity, new(0, velocity.y), delta * reduceSpeed);
             if (velocity.x > -2 && velocity.x < 2)
                 velocity.x = 0;
@@ -157,15 +158,32 @@ namespace DesktopPet.Characters
                 case CharacterBehaviour.None:
                     break;
                 case CharacterBehaviour.WalkLeft:
-                    behaviourScheduler.AddTask(new(WalkLeft, 1));
+                    AddWalkLeft();
                     break;
                 case CharacterBehaviour.WalkRight:
-                    behaviourScheduler.AddTask(new(WalkRight, 1));
+                    AddWalkRight();
                     break;
                 case CharacterBehaviour.Jump:
-                    Jump();
+                    SmallJump();
+                    int toJump = Random.Shared.Next(3);
+                    if (toJump == 0)
+                    {
+                        AddWalkRight();
+                    }
+                    else if (toJump == 1)
+                    {
+                        AddWalkLeft();
+                    }
                     break;
             }
+        }
+        private void AddWalkLeft()
+        {
+            behaviourScheduler.AddTask(new(WalkLeft, 0.1));
+        }
+        public void AddWalkRight()
+        {
+            behaviourScheduler.AddTask(new(WalkRight, 0.1));
         }
         private void WalkLeft()
         {
@@ -180,6 +198,10 @@ namespace DesktopPet.Characters
         private void Jump()
         {
             velocity.y = jumpForce;
+        }
+        private void SmallJump()
+        {
+            velocity.y = smallJumpForce;
         }
 
         public async void MakeHappy()

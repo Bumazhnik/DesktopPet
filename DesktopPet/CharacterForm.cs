@@ -52,7 +52,7 @@ namespace DesktopPet
 
 
             var bounds = new Bounds2();
-            bounds.size = new(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+            bounds.size = new(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height - config.GroundHeight);
             character = new Character(new(0, 0, Size.Width, Size.Height), bounds);
         }
 

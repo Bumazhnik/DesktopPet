@@ -4,5 +4,13 @@
     "WalkingLeft": "CharacterImages/walkLeft.png",
     "WalkingRight": "CharacterImages/walkRight.png",
     "Happy": "CharacterImages/happy.png"
-  }
+  },
+  "FavoriteWords": [
+    "one",
+    "two",
+    "three",
+    "four",
+    "привет"
+  ],
+  "BackSpaceDeletes": true
 }

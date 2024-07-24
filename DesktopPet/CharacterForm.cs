@@ -3,6 +3,7 @@ using DesktopPet.KeyboardHook;
 using DesktopPet.Structs;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -16,10 +17,8 @@ namespace DesktopPet
         IDrawState drawState;
         GlobalKeyboardHook hook = new();
         CharacterConfig config;
-        string configPath;
         public CharacterForm(string configPath)
         {
-            this.configPath = configPath;
             InitializeComponent();
 
             var db = new DrawBits(SetBits);
@@ -38,6 +37,7 @@ namespace DesktopPet
             }
             else
                 config = new CharacterConfig();
+            config.SimplifyWords();
 
             foreach (var item in config.States)
             {
@@ -62,13 +62,34 @@ namespace DesktopPet
             hook.OnKeyPressed += Hook_OnKeyPressed;
             hook.HookKeyboard();
         }
-
+        StringBuilder keyboardInput = new StringBuilder();
+        int maxLength = 50;
+        private void AddKeyboardKey(Keys key)
+        {
+            if(key == Keys.Back && config.BackSpaceDeletes)
+            {
+                if(keyboardInput.Length > 0)
+                    keyboardInput.Length--;
+            }
+            else
+                keyboardInput.Append(key.ToString().ToLower());
+            if(keyboardInput.Length > maxLength)
+            {
+                keyboardInput.Remove(0,keyboardInput.Length - maxLength);
+            }
+        }
         private void Hook_OnKeyPressed(object? sender, Keys e)
         {
-            if (e == Keys.Space)
+            AddKeyboardKey(e);
+            string text = keyboardInput.ToString();
+            foreach (var item in config.FavoriteWords)
             {
-                character.MakeHappy();
+                if (text.EndsWith(item)){
+                    character.MakeHappy();
+                    break;
+                }
             }
+            Debug.WriteLine(text);
         }
 
         protected override void OnClosing(CancelEventArgs e)

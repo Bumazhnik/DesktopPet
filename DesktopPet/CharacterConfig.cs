@@ -5,4 +5,14 @@ namespace DesktopPet;
 internal class CharacterConfig
 {
     public Dictionary<CharacterState, string> States { get; set; } = new();
+    public List<string> FavoriteWords { get; set; } = new();
+    public bool BackSpaceDeletes { get; set; }
+    public void SimplifyWords()
+    {
+        for (var i = 0; i < FavoriteWords.Count; i++)
+        {
+            string word = FavoriteWords[i].ToLower().FromRussian().ToKeys();
+            FavoriteWords[i] = word;
+        }
+    }
 }

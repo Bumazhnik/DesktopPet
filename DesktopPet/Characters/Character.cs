@@ -64,10 +64,10 @@ namespace DesktopPet.Characters
                 ReduceXVelocity(frame.delta);
                 ClampToBounds();
             }
-            Debug.WriteLine(velocity);
-            Debug.WriteLine(currentBehaviour);
-            Debug.WriteLine("Behaviours: " + behaviourScheduler.Count);
-            Debug.WriteLine("Actions: " + actionScheduler.Count);
+            //Debug.WriteLine(velocity);
+            //Debug.WriteLine(currentBehaviour);
+            //Debug.WriteLine("Behaviours: " + behaviourScheduler.Count);
+            //Debug.WriteLine("Actions: " + actionScheduler.Count);
         }
 
         private void ReduceXVelocity(double delta)
@@ -80,12 +80,12 @@ namespace DesktopPet.Characters
         public async void OnMouseDown(Vector2 cursor)
         {
             dragging = true;
+            await ClearAllTasks();
             currentBehaviour = CharacterBehaviour.None;
             State = CharacterState.Idle;
             offsetX = Position.x - cursor.x;
             offsetY = Position.y - cursor.y;
             ResetVelocity();
-            await ClearAllTasks();
         }
         private async Task ClearAllTasks()
         {
@@ -191,7 +191,7 @@ namespace DesktopPet.Characters
             await actionScheduler.AddTask(new(() =>
             {
                 State = CharacterState.Idle;
-            }, 1.1, 1));
+            }, 0.9, 1));
         }
     }
 }

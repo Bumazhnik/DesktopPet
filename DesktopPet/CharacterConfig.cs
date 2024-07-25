@@ -13,7 +13,7 @@ internal class CharacterConfig
     {
         for (var i = 0; i < FavoriteWords.Count; i++)
         {
-            string word = FavoriteWords[i].ToLower().FromRussian().ToKeys();
+            string word = FavoriteWords[i].ToLower().FromRussian().FromShiftKeys();
             FavoriteWords[i] = word;
         }
     }

@@ -9,18 +9,32 @@ namespace DesktopPet;
 internal static class KeyboardStringHelper
 {
     private const string FROM_RUSSIAN = "йцукенгшщзхъфывапролджэячсмитьбюё";
-    private const string TO_RUSSIAN = "qwertyuiop[]asdfghjkl;'zxcvbnm,.`";
-    private static readonly Dictionary<string, string> textKeyPairs = new (){
-        {"[","oem4" },
-        {"]","oem6" },
-        {";","oemsemicolon" },
-        {"'","oem7" },
-        {",","oemcomma" },
-        {".","oemperiod" },
-        {"`","oem3" },
-        {" ","space" }
+    private const string TO_RUSSIAN =   "qwertyuiop[]asdfghjkl;'zxcvbnm,.`";
+    private const string FROM_SHIFT_KEYS = "~!@#$%^&*()_+{}:\"<>?";
+    private const string TO_SHIFT_KEYS =   "`1234567890-=[];',./";
+    private static readonly Dictionary<Keys, string> keyStringPairs = new()
+    {
+        {Keys.D1,"1" },
+        {Keys.D2,"2"},
+        {Keys.D3,"3"},
+        {Keys.D4,"4"},
+        {Keys.D5,"5"},
+        {Keys.D6,"6"},
+        {Keys.D7,"7"},
+        {Keys.D8,"8"},
+        {Keys.D9,"9"},
+        {Keys.D0,"0"},
+        {Keys.OemMinus,"-"},
+        {Keys.Oemplus,"="},
+        {Keys.Space," "},
+        {Keys.Oem4,"[" },
+        {Keys.Oem6,"]"},
+        {Keys.OemSemicolon,";"},
+        {Keys.Oem7,"'" },
+        {Keys.Oemcomma,","},
+        {Keys.OemPeriod,"."},
+        {Keys.Oem3,"`"}
     };
-    private static readonly Keys[] notAllowedKeys = [Keys.Shift, Keys.ShiftKey, Keys.LShiftKey, Keys.RShiftKey];
     public static string FromRussian(this string russian)
     {
         StringBuilder builder = new StringBuilder(russian);
@@ -30,14 +44,22 @@ internal static class KeyboardStringHelper
         }
         return builder.ToString();
     }
-    public static string ToKeys(this string text)
+    public static string FromShiftKeys(this string text)
     {
         StringBuilder builder = new StringBuilder(text);
-        foreach (var pair in textKeyPairs)
+        for (int i = 0; i < FROM_SHIFT_KEYS.Length; i++)
         {
-            builder.Replace(pair.Key,pair.Value);
+            builder.Replace(FROM_SHIFT_KEYS[i], TO_SHIFT_KEYS[i]);
         }
         return builder.ToString();
     }
-    public static bool IsAllowed(this Keys key)=>!notAllowedKeys.Contains(key);
+    public static string ToKeyString(this Keys key)
+    {
+        if (keyStringPairs.TryGetValue(key, out var result))
+            return result;
+        else if(key.ToString().Length == 1)
+            return key.ToString().ToLower();
+        else
+            return string.Empty;
+    }
 }

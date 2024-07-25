@@ -69,17 +69,19 @@ namespace DesktopPet
             hook.HookKeyboard();
         }
         StringBuilder keyboardInput = new StringBuilder();
-        int maxLength = 50;
+        int maxLength = 250;
         private void AddKeyboardKey(Keys key)
         {
+            string keyString;
             if(key == Keys.Back && config.BackSpaceDeletes)
             {
                 if(keyboardInput.Length > 0)
                     keyboardInput.Length--;
+                Debug.WriteLine(keyboardInput.ToString());
             }
-            else if(key.IsAllowed())
+            else if(!string.IsNullOrEmpty(keyString = key.ToKeyString()))
             {
-                keyboardInput.Append(key.ToString().ToLower());
+                keyboardInput.Append(keyString);
                 string text = keyboardInput.ToString();
                 foreach (var item in config.FavoriteWords)
                 {
@@ -93,6 +95,7 @@ namespace DesktopPet
                         break;
                     }
                 }
+                Debug.WriteLine(keyboardInput.ToString());
             }
 
             if(keyboardInput.Length > maxLength)
@@ -103,8 +106,6 @@ namespace DesktopPet
         private void Hook_OnKeyPressed(object? sender, Keys e)
         {
             AddKeyboardKey(e);
-
-            Debug.WriteLine(keyboardInput.ToString());
         }
 
         protected override void OnClosing(CancelEventArgs e)
